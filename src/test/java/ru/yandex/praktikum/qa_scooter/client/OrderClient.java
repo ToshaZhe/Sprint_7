@@ -9,12 +9,12 @@ import static io.restassured.RestAssured.given;
 public class OrderClient extends RestClient {
     public static final String ORDER = "orders";
 
-    @Step("Размещение заказа")
+    @Step("Размещение заказа. Цвет: {orderRequest.color}")
     public ValidatableResponse createOrder(OrderRequest orderRequest) {
         return given().spec(getDefaultRequestSpec()).body(orderRequest).post(ORDER).then();
     }
 
-    @Step("Получение заказа по его номеру")
+    @Step("Получение списка заказов")
     public ValidatableResponse getOrderList(OrderRequest orderRequest) {
         return given().spec(getDefaultRequestSpec()).body(orderRequest).get(ORDER).then();
     }

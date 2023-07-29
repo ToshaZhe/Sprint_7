@@ -21,6 +21,7 @@ public class CourierLoginTest {
 
     @Before
     public void setUp() {
+        id = null;
         courierClient = new CourierClient();
         randomCourierRequest = getRandomCourierRequest();
         courierClient.createCourier(randomCourierRequest).assertThat().statusCode(SC_CREATED).and().body("ok", equalTo(true));
@@ -68,7 +69,7 @@ public class CourierLoginTest {
     @Test
     public void courierAuthIncorrectPasswordShouldNotBeAuthorizedTest() {
         LoginRequest loginRequest = getLoginRequest(randomCourierRequest);
-        loginRequest.setPassword("qwerty");
+        loginRequest.setPassword("ytrewq");
         courierClient.loginCourier(loginRequest).assertThat().statusCode(SC_NOT_FOUND).and().body("message", equalTo("Учетная запись не найдена"));
     }
 }

@@ -20,6 +20,7 @@ public class CourierTest {
 
     @Before
     public void setUp() {
+        id = null;
         courierClient = new CourierClient();
     }
 
@@ -33,11 +34,10 @@ public class CourierTest {
     @Test
     @DisplayName("Создание курьера, получение id")
     public void courierCreatingCorrectParamShouldBeCreatedTest() {
-        CourierRequest randomCourierRequest = getCourierRequestWithoutFirstName();
+        CourierRequest randomCourierRequest = getRandomCourierRequest();
         courierClient.createCourier(randomCourierRequest).assertThat().statusCode(SC_CREATED).and().body("ok", equalTo(true));
 
         LoginRequest loginRequest = getLoginRequest(randomCourierRequest);
-
         id = courierClient.loginCourier(loginRequest).assertThat().statusCode(SC_OK).and().body("id", notNullValue()).extract().path("id");
     }
 
@@ -46,6 +46,10 @@ public class CourierTest {
     public void courierCreatingNotUniqueLoginShouldNotBeCreatedTest() {
         CourierRequest randomCourierRequest = getRandomCourierRequest();
         courierClient.createCourier(randomCourierRequest).assertThat().statusCode(SC_CREATED).and().body("ok", equalTo(true));
+
+        LoginRequest loginRequest = getLoginRequest(randomCourierRequest);
+        id = courierClient.loginCourier(loginRequest).assertThat().statusCode(SC_OK).and().body("id", notNullValue()).extract().path("id");
+
         courierClient.createCourier(randomCourierRequest).assertThat().statusCode(SC_CONFLICT).and().body("message", equalTo("Этот логин уже используется. Попробуйте другой."));
     }
 
@@ -68,7 +72,7 @@ public class CourierTest {
     @Test
     @DisplayName("Создание курьера с пустым именем")
     public void courierCreatingFirstNameIsNullShouldBeCreatedTest() {
-        CourierRequest randomCourierRequest = getRandomCourierRequest();
+        CourierRequest randomCourierRequest = getCourierRequestWithoutFirstName();
         courierClient.createCourier(randomCourierRequest).assertThat().statusCode(SC_CREATED).and().body("ok", equalTo(true));
 
         LoginRequest loginRequest = getLoginRequest(randomCourierRequest);
